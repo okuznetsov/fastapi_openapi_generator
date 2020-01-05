@@ -1,0 +1,38 @@
+from typing import List, Dict
+from fastapi import APIRouter, Header
+
+
+{{#imports}}{{import}}
+{{/imports}}
+
+router = APIRouter()
+{{#operations}}
+{{#operation}}
+
+@router.{{httpMethod.toLowerCase}}(
+    "{{path}}",
+    response_model={{returnType}},
+    response_model_exclude_unset=True,
+    tags=[
+    {{#tags}}
+        "{{name}}",
+    {{/tags}}
+    ],
+    summary="{{summary}}",
+)
+def {{nickname}}(
+{{#bodyParams}}
+    request: {{dataType}}{{^required}} = None{{/required}},
+{{/bodyParams}}
+{{#headerParams}}
+    {{paramName}}: Header(
+        {{#required}}...{{/required}}{{^required}}None{{/required}},
+        description="{{description}}",
+        {{#vendorExtensions.x-python-connexion-openapi-name}}alias="{{vendorExtensions.x-python-connexion-openapi-name}}",{{/vendorExtensions.x-python-connexion-openapi-name}}
+    ),
+{{/headerParams}}
+):
+    return {{returnType}}()
+
+{{/operation}}
+{{/operations}}

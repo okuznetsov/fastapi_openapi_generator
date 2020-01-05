@@ -1,0 +1,66 @@
+from datetime import datetime, date
+from enum import Enum
+from typing import Optional, List
+
+from pydantic import BaseModel, Field
+
+{{#models}}
+{{#model}}
+{{#pyImports}}
+{{import}}
+{{/pyImports}}
+{{/model}}
+{{/models}}
+
+
+{{#models}}
+{{#model}}
+{{#allowableValues}}
+class {{classname}}(Enum):
+    {{#enumVars}}
+    {{name}} = {{{value}}}
+    {{/enumVars}}
+{{/allowableValues}}
+{{^allowableValues}}
+class {{classname}}(BaseModel):
+{{#vars}}
+    {{name}}: {{#required}}{{dataType}}{{/required}}{{^required}}Optional[{{dataType}}]{{/required}} = Field(
+        {{#required}}...{{/required}}{{^required}}None{{/required}},
+        {{#description}}description="{{{description}}}",{{/description}}
+        {{#hasValidation}}
+        {{#maxLength}}
+        max_length = {{maxLength}},
+        {{/maxLength}}
+        {{#minLength}}
+        min_length = {{minLength}},
+        {{/minLength}}
+        {{#exclusiveMinimum}}
+        gt={{exclusiveMinimum}},
+        {{/exclusiveMinimum}}
+        {{#minimum}}
+        ge={{minimum}},
+        {{/minimum}}
+        {{#exclusiveMaximum}}
+        lt={{exclusiveMaximum}},
+        {{/exclusiveMaximum}}
+        {{#maximum}}
+        le={{maximum}},
+        {{/maximum}}
+        {{#minItems}}
+        min_items={{minItems}},
+        {{/minItems}}
+        {{#maxItems}}
+        max_items={{maxItems}},
+        {{/maxItems}}
+        {{#pattern}}
+        regex="{{pattern}}",
+        {{/pattern}}
+        {{#multipleOf}}
+        multiple_of={{multiple_of}},
+        {{/multipleOf}}
+        {{/hasValidation}}
+    )
+{{/vars}}
+{{/allowableValues}}
+{{/model}}
+{{/models}}

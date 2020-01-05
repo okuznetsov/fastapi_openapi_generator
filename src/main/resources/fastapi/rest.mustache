@@ -1,0 +1,26 @@
+import uplink
+
+{{#imports}}{{import}}
+{{/imports}}
+
+
+class ApiClient(uplink.Consumer):
+{{#operations}}
+{{#operation}}
+    @{{httpMethod.toLowerCase}}("{{path}}")
+    async def {{operationId}}(
+        self,
+    {{#bodyParams}}
+        request: uplink.Body(type={{dataType}}),
+    {{/bodyParams}}
+    {{#headerParams}}
+        {{paramName}}: uplink.Header({{#vendorExtensions.x-python-connexion-openapi-name}}"{{vendorExtensions.x-python-connexion-openapi-name}}",{{/vendorExtensions.x-python-connexion-openapi-name}}),
+    {{/headerParams}}
+    ) -> {{returnType}}:
+        """
+        {{summary}}
+        """
+        ...
+
+{{/operation}}
+{{/operations}}
